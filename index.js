@@ -1,39 +1,48 @@
 const timerDisplay = document.getElementById('time-display');
 const endTime = document.getElementById('end-time-display');
-const buttons = document.querySelectorAll('[data-time]'); // select all buttons with data-time attribute
+const buttons = document.querySelectorAll('[data-time]');
+const workButton = document.querySelector('.timer__button--work');
+const addTimeBtn = document.querySelector('.timer__btn--add')
+const subtractTimeBtn = document.querySelector('.timer__btn--subtract')
 
 
 let countdown;
+let secondsLeft;
+
+addTimeBtn.addEventListener('click', ()=>{
+    secondsLeft += 30
+    displayTimeLeft(secondsLeft)
+})
+
+
 
 function timer(seconds) {
-    clearInterval(countdown); //clear any existing timers
-    const now = Date.now() //get current miliseconds from Jan 1, 1970
-    const then = now + seconds * 1000; //add our 25 minutes (in seconds) + to now variable
+    clearInterval(countdown); 
+    const now = Date.now();
+    const then = now + seconds * 1000;
     displayTimeLeft(seconds);
     displayEndTime(then);
     
-    /* set interval will repeatedly change the amount of time left every second*/
     countdown = setInterval(() => {
-        const secondsLeft = Math.round((then - Date.now()) / 1000);
+        secondsLeft = Math.round((then - Date.now()) / 1000); //then is a set time and Date.now() will keep going up and reach then eventually.
         if(secondsLeft < 0) {
-            clearInterval(countdown) //once we reach 0 we can stop setInterval
+            clearInterval(countdown)
             return;
         }
         displayTimeLeft(secondsLeft)
     }, 1000)
 }
 
-/* This function takes in secondsLeft as the parameter from above. Because seconds left changes each second, the display variable here changes each second*/
 function displayTimeLeft(seconds) {
     const minutes = Math.floor(seconds / 60);
     const remainderSeconds = seconds % 60 ;
     const display = `${minutes}:${remainderSeconds < 10 ? '0' : ''}${remainderSeconds}`;
     timerDisplay.textContent = display;
-    document.title = display;
+    document.title = display + "- Time to focus!"
 }
+let defaultTime = 1500; //seconds
+displayTimeLeft(defaultTime)
 
-
-/* this function just need to run once. We have endtime set to 12 hours US standard, in settings I can allow people to switch it to 24 hour standard */
 function displayEndTime(timestamp) {
     const end = new Date(timestamp);
     const hour = end.getHours();
@@ -41,13 +50,47 @@ function displayEndTime(timestamp) {
     endTime.textContent = `End Time: ${hour > 12 ? hour - 12 : hour}:${minutes < 10 ? '0' : ''}${minutes}`;
 }
 
-function startTimer(){
-    const seconds = parseInt(this.dataset.time); //this refers back to the button we pressed since ,this, is used only for the buttons callback function below. Dataset is used to read our buttons data attribute value;
+function startTimer(secondsStr){
+    const seconds = parseInt(secondsStr); 
     timer(seconds);
 }
 
-buttons.forEach(button => button.addEventListener('click', startTimer)) //loop over every button with data-time attribue and add an event listener that runs startTimer();
+/* Set time for all buttons */
+// buttons.forEach(button => button.addEventListener('click', e => {
+//     startTimer(e.target.dataset.time)
+// }))
 
+/* Set time for start/pause button */
+var paused = true;
+let firstClick = true;
+workButton.addEventListener('click', function(e) {
+
+    //after initial - change end time & add time left to 
+    if (paused === true && firstClick === false){
+        startTimer(secondsLeft);
+        paused = false;
+        workButton.textContent = 'Stop' 
+        workButton.style.backgroundColor = 'red';
+        
+    } else if(paused === false){
+        paused = true;
+        workButton.textContent = 'Start'
+        clearInterval(countdown)
+        console.log(secondsLeft)
+    }
+
+    if(firstClick){
+        startTimer(e.target.dataset.time);
+        workButton.textContent = 'Stop'
+        workButton.style.backgroundColor = 'red';
+        paused = false;
+        firstClick = false;
+    }
+})
+
+
+/* Form to input minutes manually */
+/*
 //instead of traditionally selecting with querySelector or getElement you can actually select by the name attribute on HTML elements and then even select the childs name attribute (minutes).
 document.customForm.addEventListener('submit', function(e){
     e.preventDefault();
@@ -55,7 +98,7 @@ document.customForm.addEventListener('submit', function(e){
     timer(mins * 60);
     this.reset();
 })
+*/
 
-// timer(124)
 // const date = new Date();
 // const [minutes, seconds] = [date.getMinutes(), date.getSeconds()];
