@@ -61,18 +61,18 @@ function startTimer(secondsStr){
 // }))
 
 /* Set time for start/pause button */
+//see if I can recode this. Kind of hard to read.
 var paused = true;
 let firstClick = true;
 workButton.addEventListener('click', function(e) {
 
     //after initial - change end time & add time left to 
-    if (paused === true && firstClick === false){
+    if (paused && !firstClick){
         startTimer(secondsLeft);
         paused = false;
         workButton.textContent = 'Stop' 
-        workButton.style.backgroundColor = 'red';
         
-    } else if(paused === false){
+    } else if(!paused){
         paused = true;
         workButton.textContent = 'Start'
         clearInterval(countdown)
@@ -82,7 +82,6 @@ workButton.addEventListener('click', function(e) {
     if(firstClick){
         startTimer(e.target.dataset.time);
         workButton.textContent = 'Stop'
-        workButton.style.backgroundColor = 'red';
         paused = false;
         firstClick = false;
     }
