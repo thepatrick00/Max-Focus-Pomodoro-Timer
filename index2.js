@@ -52,13 +52,14 @@ function startTimer(secondsStr){
 //see if I can recode this. Kind of hard to read.
 let paused = true;
 let wasBtnClicked = false;
+let correctTimeVar = seconds;
 /* START BUTTON */
 workButton.addEventListener('click', e => {
     paused = !paused
-    correctVar = !wasBtnClicked ? seconds : secondsLeft
-    console.log(correctVar)
+    correctTimeVar = !wasBtnClicked ? seconds : secondsLeft
+    console.log(correctTimeVar)
     if(!paused){
-        startTimer(correctVar)
+        startTimer(correctTimeVar)
         workButton.textContent = 'Stop' 
     } else if(paused){
         clearInterval(countdown)
@@ -69,3 +70,4 @@ workButton.addEventListener('click', e => {
 
 //Have the time displayed before the timer is even clicked.
 displayTimeLeft(seconds)
+
