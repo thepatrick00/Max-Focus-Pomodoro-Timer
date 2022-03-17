@@ -8,14 +8,16 @@ const subtractTimeBtn = document.querySelector('.timer__btn--subtract');
 
 let minutes = 1;
 let seconds = minutes*60;
-let secondsLeft;
+let secondsLeft = seconds; //keep this the same as seconds because if wasButtonClick is rapidly clicked twice the coundown interval won't run and secondsLeft will be NaN;
 let countdown;
 
-function timer(seconds) {
+
+function timer(s) {
     clearInterval(countdown); 
     const now = Date.now();
-    const then = now + seconds * 1000;
-    displayTimeLeft(seconds);
+    const then = now + s * 1000;
+    s = !wasBtnClicked ? seconds : secondsLeft;
+    displayTimeLeft(s);
     displayEndTime(then);
     
     countdown = setInterval(() => {
@@ -29,9 +31,9 @@ function timer(seconds) {
     }, 1000)
 }
 
-function displayTimeLeft(seconds) {
-    const minutes = Math.floor(seconds / 60);
-    const remainderSeconds = seconds % 60 ;
+function displayTimeLeft(s) {
+    const minutes = Math.floor(s / 60);
+    const remainderSeconds = s % 60 ;
     const display = `${minutes}:${remainderSeconds < 10 ? '0' : ''}${remainderSeconds}`;
     timerDisplay.textContent = display;
     document.title = display + "- Time to focus!"
@@ -51,23 +53,56 @@ function startTimer(secondsStr){
 
 //see if I can recode this. Kind of hard to read.
 let paused = true;
+/* wasBtnClicked is a VERY IMPORTANT variable for this whole app to function correctly. It tells us weather the work button was click yet. If it was not then we use startTimer(seconds). Otherwise we use startTimer(secondsLeft) */
 let wasBtnClicked = false;
-let correctTimeVar = seconds;
 /* START BUTTON */
 workButton.addEventListener('click', e => {
-    paused = !paused
-    correctTimeVar = !wasBtnClicked ? seconds : secondsLeft
-    console.log(correctTimeVar)
-    if(!paused){
-        startTimer(correctTimeVar)
-        workButton.textContent = 'Stop' 
+    
+    if(paused && !wasBtnClicked){
+        startTimer(seconds)
+        workButton.textContent = 'Stop'
     } else if(paused){
+        startTimer(secondsLeft)
+        workButton.textContent = 'Stop' 
+    } else if(!paused){
         clearInterval(countdown)
         workButton.textContent = 'Start'
     }
+    paused = !paused
     wasBtnClicked = true;
 })
 
 //Have the time displayed before the timer is even clicked.
-displayTimeLeft(seconds)
+displayTimeLeft(!wasBtnClicked ? seconds : secondsLeft)
 
+
+addTimeBtn.addEventListener('click', function(){
+    if(!wasBtnClicked){
+        seconds += 30
+        startTimer(seconds)
+        clearInterval(countdown)
+    } else {
+        secondsLeft += 30
+        startTimer(secondsLeft)
+        clearInterval(countdown)
+        displayTimeLeft(secondsLeft)
+        workButton.textContent = 'Start'
+    }
+    console.log('ADD BTN: ', 'seconds:', seconds, ' secondsLeft:', secondsLeft)
+})
+
+
+subtractTimeBtn.addEventListener('click', function(){
+    if(!wasBtnClicked){
+        seconds -= 30
+        startTimer(seconds)
+        clearInterval(countdown)
+    } else {
+        secondsLeft -= 30
+        startTimer(secondsLeft)
+        clearInterval(countdown)
+        displayTimeLeft(secondsLeft)
+        workButton.textContent = 'Start'
+    }
+    console.log('ADD BTN: ', 'seconds:', seconds, ' secondsLeft:', secondsLeft)
+})
