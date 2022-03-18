@@ -19,6 +19,11 @@ function timer(s) {
     clearInterval(countdown); 
     const now = Date.now();
     const then = now + s * 1000;
+    // if(!wasBtnClicked){
+    //     s = seconds
+    // } else if (wasBtnClicked){
+    //     s = secondsLeft
+    // }
     s = !wasBtnClicked ? seconds : secondsLeft;
     displayTimeLeft(s);
     displayEndTime(then);
@@ -54,7 +59,6 @@ function startTimer(secondsStr){
     timer(seconds);
 }
 
-//see if I can recode this. Kind of hard to read.
 let paused = true;
 /* wasBtnClicked is a VERY IMPORTANT variable for this whole app to function correctly. It tells us weather the work button was click yet. If it was not then we use startTimer(seconds). Otherwise we use startTimer(secondsLeft) */
 let wasBtnClicked = false;
@@ -109,3 +113,6 @@ subtractTimeBtn.addEventListener('click', function(){
     }
     console.log('ADD BTN: ', 'seconds:', seconds, ' secondsLeft:', secondsLeft)
 })
+
+/* SHORT BREAK BUTTON */
+//have seperate function that stops time for all button clicks if they are active. The button clicks set the time. The stop time function just stops the time.
