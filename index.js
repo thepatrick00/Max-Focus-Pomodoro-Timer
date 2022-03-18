@@ -1,47 +1,46 @@
 const timerDisplay = document.getElementById('time-display');
-const endTime = document.getElementById('end-time-display');
-const buttons = document.querySelectorAll('[data-time]');
-const workButton = document.querySelector('.timer__button--work');
-const addTimeBtn = document.querySelector('.timer__btn--add')
-const subtractTimeBtn = document.querySelector('.timer__btn--subtract')
+const endTime = document.getElementById('endTimeDisplay');
+
+const addTimeBtn = document.querySelector('.timer__btn--add');
+const subtractTimeBtn = document.querySelector('.timer__btn--subtract');
+
+const workBtn = document.querySelector('.timer__btn--work');
+const shortBreakBtn = document.querySelector('.timer__btn--shortBreak');
+const longBreakBtn = document.querySelector('.timer__btn--longBreak');
 
 
+let minutes = 25;
+let seconds = minutes*60;
+let secondsLeft = seconds; //keep this the same as seconds because if wasButtonClick is rapidly clicked twice the coundown interval won't run and secondsLeft will be NaN;
 let countdown;
-let secondsLeft;
-
-addTimeBtn.addEventListener('click', ()=>{
-    secondsLeft += 30
-    displayTimeLeft(secondsLeft)
-})
 
 
-
-function timer(seconds) {
+function timer(s) {
     clearInterval(countdown); 
     const now = Date.now();
-    const then = now + seconds * 1000;
-    displayTimeLeft(seconds);
+    const then = now + s * 1000;
+    s = !wasBtnClicked ? seconds : secondsLeft;
+    displayTimeLeft(s);
     displayEndTime(then);
     
     countdown = setInterval(() => {
-        secondsLeft = Math.round((then - Date.now()) / 1000); //then is a set time and Date.now() will keep going up and reach then eventually.
+        secondsLeft = Math.round( (then - Date.now()) / 1000); //Divide by 1000 to get it back to seconds
         if(secondsLeft < 0) {
             clearInterval(countdown)
+            console.log("timerStopped")
             return;
         }
         displayTimeLeft(secondsLeft)
     }, 1000)
 }
 
-function displayTimeLeft(seconds) {
-    const minutes = Math.floor(seconds / 60);
-    const remainderSeconds = seconds % 60 ;
+function displayTimeLeft(s) {
+    const minutes = Math.floor(s / 60);
+    const remainderSeconds = s % 60 ;
     const display = `${minutes}:${remainderSeconds < 10 ? '0' : ''}${remainderSeconds}`;
     timerDisplay.textContent = display;
     document.title = display + "- Time to focus!"
 }
-let defaultTime = 1500; //seconds
-displayTimeLeft(defaultTime)
 
 function displayEndTime(timestamp) {
     const end = new Date(timestamp);
@@ -55,49 +54,58 @@ function startTimer(secondsStr){
     timer(seconds);
 }
 
-/* Set time for all buttons */
-// buttons.forEach(button => button.addEventListener('click', e => {
-//     startTimer(e.target.dataset.time)
-// }))
-
-/* Set time for start/pause button */
 //see if I can recode this. Kind of hard to read.
-var paused = true;
-let firstClick = true;
-workButton.addEventListener('click', function(e) {
-
-    //after initial - change end time & add time left to 
-    if (paused && !firstClick){
-        startTimer(secondsLeft);
-        paused = false;
-        workButton.textContent = 'Stop' 
-        
+let paused = true;
+/* wasBtnClicked is a VERY IMPORTANT variable for this whole app to function correctly. It tells us weather the work button was click yet. If it was not then we use startTimer(seconds). Otherwise we use startTimer(secondsLeft) */
+let wasBtnClicked = false;
+/* START BUTTON */
+workBtn.addEventListener('click', e => {
+    
+    if(paused && !wasBtnClicked){
+        startTimer(seconds)
+        workBtn.textContent = 'Stop'
+    } else if(paused){
+        startTimer(secondsLeft)
+        workBtn.textContent = 'Stop' 
     } else if(!paused){
-        paused = true;
-        workButton.textContent = 'Start'
         clearInterval(countdown)
-        console.log(secondsLeft)
+        workBtn.textContent = 'Start'
     }
+    paused = !paused
+    wasBtnClicked = true;
+})
 
-    if(firstClick){
-        startTimer(e.target.dataset.time);
-        workButton.textContent = 'Stop'
-        paused = false;
-        firstClick = false;
+//Have the time displayed before the timer is even clicked.
+displayTimeLeft(!wasBtnClicked ? seconds : secondsLeft)
+
+
+addTimeBtn.addEventListener('click', function(){
+    if(!wasBtnClicked){
+        seconds += 30
+        startTimer(seconds)
+        clearInterval(countdown)
+    } else {
+        secondsLeft += 30
+        startTimer(secondsLeft)
+        clearInterval(countdown)
+        displayTimeLeft(secondsLeft)
+        workBtn.textContent = 'Start'
     }
+    console.log('ADD BTN: ', 'seconds:', seconds, ' secondsLeft:', secondsLeft)
 })
 
 
-/* Form to input minutes manually */
-/*
-//instead of traditionally selecting with querySelector or getElement you can actually select by the name attribute on HTML elements and then even select the childs name attribute (minutes).
-document.customForm.addEventListener('submit', function(e){
-    e.preventDefault();
-    const mins = this.minutes.value;
-    timer(mins * 60);
-    this.reset();
+subtractTimeBtn.addEventListener('click', function(){
+    if(!wasBtnClicked){
+        seconds -= 30
+        startTimer(seconds)
+        clearInterval(countdown)
+    } else {
+        secondsLeft -= 30
+        startTimer(secondsLeft)
+        clearInterval(countdown)
+        displayTimeLeft(secondsLeft)
+        workBtn.textContent = 'Start'
+    }
+    console.log('ADD BTN: ', 'seconds:', seconds, ' secondsLeft:', secondsLeft)
 })
-*/
-
-// const date = new Date();
-// const [minutes, seconds] = [date.getMinutes(), date.getSeconds()];

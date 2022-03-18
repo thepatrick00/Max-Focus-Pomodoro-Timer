@@ -2,19 +2,35 @@ html, body {
     margin: 0;
     padding: 0;
 }
+* {
+    box-sizing: border-box;
+}
+p {
+    font-family: Noto Sans, 'san-serif';
+}
+@font-face {
+    font-family: digital;
+    src: url(digital-7.ttf);
+  }
 
+#time-display {
+    font-family: digital;
+    letter-spacing: 7px;
+    color: #f16e07;
+    font-size: 4rem;
+}
 .container,
-.button-container,
 .timer {
     display: flex;
     justify-content: center;
 }
 
 .container {
-    background-color: lightblue;
+    background-color: hsl(19, 30%, 20%);
     flex-direction: column;
     align-items: center;
     height: 100vh;
+    
 }
 
 .timer,
@@ -22,31 +38,106 @@ button {
     margin: 0.5em;
     border-radius: 5px;
 }
+.container__middle {
+    display: flex;
+    align-items: center;
 
+    background-image: url(wood\ texture.jpeg);
+    background-color: hsl(19, 30%, 57%);
+    background-blend-mode: multiply;
+
+    border: 4px solid hsl(19, 30%, 10%);
+    justify-content: center;
+    min-width: 300px;
+    max-width: 320px;
+}
 .timer {
     height: 11em;
-    width: 12em;
-    background-color: hotpink;
+    width: 60%;
+    background-color: rgb(12, 12, 12);
     align-items: center;
     padding: 1em;
+}
+
+.timer__btn--subtract,
+.timer__btn--add {
+    outline: 2px solid hsl(19, 30%, 10%);
+    border-bottom: 3px solid hsl(19, 30%, 10%);
+    background-image: url(wood\ texture.jpeg);
+    background-color: hsl(19, 30%, 65%);
+    background-blend-mode: multiply;
+    width: 15%;
+    color: white;
+    border-radius: 4px;
+    padding: .25em;
+    font-size: 2rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+.timer__btn--subtract:hover,
+.timer__btn--subtract:focus,
+.timer__btn--add:hover, 
+.timer__btn--add:focus { 
+    border-bottom: none;
 }
 
 .timer p {
     font-size: 100px;
 }
 
+
+/* button container */
+.button-container {
+    border: 4px solid hsl(19, 30%, 10%);
+    border-top: 0;
+    background-image: url(wood\ texture.jpeg);
+    background-color: hsl(19, 30%, 47%);
+    background-blend-mode: multiply;
+    max-width: 300px;
+    display: flex;
+    padding: .5rem;
+}
+.timer__btn {
+    outline: 2px solid hsl(19, 30%, 10%);
+    border-bottom: 3px solid hsl(19, 30%, 10%);
+    background-image: url(wood\ texture.jpeg);
+    background-color: hsl(19, 30%, 65%);
+    background-blend-mode: multiply;
+    
+    color: ghostwhite;
+    padding: 1em;
+    font-family: Noto Sans;
+    letter-spacing: 1px;
+    width: 28%;
+}
+.timer__btn:hover,
+.timer__btn:focus {
+    background-blend-mode:multiply;
+    border-bottom: none;
+}
+.timer__btn:focus {
+    outline: 2px solid hsl(19, 30%, 47%)
+}
+
+.timer__btn--work{
+    background-position: left;
+}
+.timer__btn--shortBreak{
+    background-position: center;
+}
+.timer__btn--longBreak{
+    background-position: right;
+}
+
+
 button {
-    width: 100px;
     border: none;
     border-radius: 5px;
     padding: 0.25em 0.5em;
     box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
 }
-
-button:hover {
-    cursor: pointer;
-    background: lightgray;
-}
-#end-time-display {
+#endTimeDisplay {
     display: block;
+    color: hsl(0, 10%, 90%);
 }
+

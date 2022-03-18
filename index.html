@@ -6,24 +6,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MaxFocus Timer</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="container">
-        <div class="timer">
-            <button class="timer__btn--subtract">-</button>
-            <p id="time-display">0:00</p>
-            <button class="timer__btn--add">+</button>
+        <div class="container__middle">
+            <span class="timer__btn--subtract">-</span>
+            <div class="timer">
+                <p id="time-display">0:00</p>
+            </div>
+            <span class="timer__btn--add">+</span>
         </div>
-        <p id="end-time-display">End Time: 0:00</p>
         <div class="button-container">
-            <button data-time="1500" class="timer__button timer__button--work">Start</button>
-            <!-- <button data-time="300" class="timer__button">Short break</button>
-            <button data-time="900" class="timer__button">Long break</button> -->
+            <button class="timer__btn timer__btn--work">Start</button>
+            <button class="timer__btn timer__btn--shortBreak">Short break</button>
+            <button class="timer__btn timer__btn--longBreak">Long break</button>
         </div>
-        <!-- <form name="customForm" id="custom">
-            <input type="text" name="minutes" placeholder="Enter Minutes">
-        </form> -->
+            <!-- <form name="customForm" id="custom">
+                <input type="text" name="minutes" placeholder="Enter Minutes">
+            </form> -->
+            <p id="endTimeDisplay">End Time: 0:00</p>
     </div>
-    <script src="index2.js"></script>
+    <script src="index.js"></script>
 </body>
 </html>
